@@ -19,7 +19,7 @@ MAX_LOOPS=10
 LOOP_COUNTER=0
 
 if [ -e "$LOCK_FILE" ]; then
-    echo "Error: Ralph Loop is already running! Exiting..."
+    echo "❌ Error: Ralph Loop is already running! Exiting..."
     exit 1
 fi
 
@@ -36,13 +36,13 @@ while [[ "$#" -gt 0 ]]; do
     --engine)
       ENGINE="$2"
       if [[ "$ENGINE" != "claude" && "$ENGINE" != "opencode" ]]; then
-        echo "Error: Unsupported engine '$ENGINE'. Use '$0 --engine claude' or '$0 --engine opencode'."
+        echo "❌ Error: Unsupported engine '$ENGINE'. Use '$0 --engine claude' or '$0 --engine opencode'."
         exit 1
       fi
       shift 2
       ;;
     *)
-      echo "Error: Unknown argument '$1'."
+      echo "❌ Error: Unknown argument '$1'."
       echo "Usage: $0 [MAX_LOOPS] [--engine claude|opencode]"
       exit 1
       ;;
@@ -50,16 +50,16 @@ while [[ "$#" -gt 0 ]]; do
 done
 
 if ! command -v $ENGINE &> /dev/null; then
-    echo "Error: $ENGINE CLI is not installed."
+    echo "❌ Error: $ENGINE CLI is not installed."
     exit 1
 fi
 
 if [ ! -f PRD.md ]; then
-    echo "Error: PRD.md not found."
+    echo "❌ Error: PRD.md not found."
     exit 1
 fi
 
-echo "🚀 Starting Ralph Loop for at most $MAX_LOOPS iterations, using $ENGINE..."
+echo "🟢 Starting Ralph Loop for at most $MAX_LOOPS iterations, using $ENGINE..."
 
 ERROR_FEEDBACK=""
 
@@ -95,7 +95,8 @@ while true; do
 
     LOOP_COUNTER=$((LOOP_COUNTER+1))
 
-    echo "Active Task: $CURRENT_TASK"
+    echo "Active Task:
+    $CURRENT_TASK"
 
     TARGETED_TEST=$(echo "$CURRENT_TASK" | sed -n 's/.*`\[test: \(.*\)\]`.*/\1/p')
 
@@ -131,17 +132,18 @@ $PRD_CONTENT
 
     ERROR_FEEDBACK=""
 
-    echo "Handing control to $ENGINE..."
+    echo "🟡 Handing control to $ENGINE..."
     OUTPUT=""
     ENGINE_EXIT=0
     if [[ "$ENGINE" == "claude" ]]; then
         set +e
-        OUTPUT=$(claude -p "$PROMPT" --allowedTools "Read,Edit,Write,Glob,Grep,Bash")
+        # OUTPUT=$(claude -p "$PROMPT" --allowedTools "Read,Edit,Write,Glob,Grep,Bash")
+        OUTPUT=$(claude -p "$PROMPT" --allowedTools "Read,Edit,Write,Glob,Grep,Bash" --verbose | tee /dev/tty)
         ENGINE_EXIT=$?
         set -e
 
         if [[ "$OUTPUT" == *"rate_limit_error"* ]] || [[ "$OUTPUT" == *"insufficient_quota"* ]] || [[ "$OUTPUT" == *"credit balance"* ]]; then
-            echo "Claude rate limit exceeded. Waiting for 1 hour..."
+            echo "🟠 Claude rate limit exceeded. Waiting for 1 hour..."
             sleep 3600 # 1 hour
             LOOP_COUNTER=$((LOOP_COUNTER-1))
             continue
@@ -154,7 +156,7 @@ $PRD_CONTENT
     fi
 
     if [[ $ENGINE_EXIT -ne 0 ]]; then
-        echo "❌ Engine exited with code $ENGINE_EXIT. Retrying..."
+        echo "🟠 Engine exited with code $ENGINE_EXIT. Retrying..."
         sleep 5
         continue
     fi
@@ -185,13 +187,15 @@ $PRD_CONTENT
     set -e
 
     if [ $TEST_EXIT_CODE -eq 0 ]; then
-        echo "✅ Task passed! Continuing..."
+        echo "🟢 Task passed! Continuing..."
+        CURRENT_TASK_LABEL="Iteration $LOOP_COUNTER"
         
         if [ -n "$PROPOSED_MEMORY" ]; then
             echo "$PROPOSED_MEMORY" > MEMORY.md
         fi
         
         if [ -n "$PROPOSED_LEDGER" ]; then
+            CURRENT_TASK_LABEL=$(printf '%s' "$PROPOSED_LEDGER" | tr -d '\n' | grep -o '{.*}' | jq -r '.task')
             echo "$PROPOSED_LEDGER" >> .agent-ledger.jsonl
         fi
 
@@ -204,9 +208,9 @@ $PRD_CONTENT
         }' PRD.md > PRD.md.tmp && mv PRD.md.tmp PRD.md
         
         git add .
-        git commit -m "chore(ai): $CURRENT_TASK" 
+        git commit -m "chore(ai): $CURRENT_TASK_LABEL" 
     else
-        echo "❌ Validation failed. The agent must try again."
+        echo "🔴 Validation failed. The agent must try again."
 
         ERROR_FEEDBACK="
         YOUR LAST ATTEMPT FAILED!
