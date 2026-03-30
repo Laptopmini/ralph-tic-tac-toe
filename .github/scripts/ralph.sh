@@ -67,7 +67,7 @@ while true; do
     echo "------------------------- Iteration $LOOP_COUNTER/$MAX_LOOPS -------------------------"
     echo "Parsing Active Task & Target Test..."
 
-    CURRENT_TASK=$(grep -m 1 "^\s*- \[ \]" PRD.md)
+    CURRENT_TASK=$(grep -m 1 "^\s*- \[ \]" PRD.md || true)
 
     if [ -z "$CURRENT_TASK" ]; then
         echo "No incomplete tasks found in PRD.md. Cleaning up..."
