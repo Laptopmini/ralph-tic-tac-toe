@@ -10,6 +10,7 @@ set -euo pipefail
 # Settings
 ARCHIVE_FOLDER=".prds"
 LOCK_FILE=".ralph.lock"
+LOG_FILE=".ralph.log"
 
 # Options
 ENGINE="claude"
@@ -24,6 +25,7 @@ if [ -e "$LOCK_FILE" ]; then
 fi
 
 touch "$LOCK_FILE"
+> "$LOG_FILE"  # Truncate the log file
 trap "rm -f $LOCK_FILE" EXIT
 
 if [[ -n "${1:-}" && "${1:-}" != --* ]]; then
@@ -58,6 +60,10 @@ if [ ! -f PRD.md ]; then
     echo "❌ Error: PRD.md not found."
     exit 1
 fi
+
+# Capture all output to the log file
+exec > >(tee -a "$LOG_FILE")
+exec 2>&1
 
 echo "🟢 Starting Ralph Loop for at most $MAX_LOOPS iterations, using $ENGINE..."
 
@@ -192,13 +198,13 @@ $PRD_CONTENT
         
         if [ -n "$PROPOSED_MEMORY" ]; then
             echo "$PROPOSED_MEMORY" > MEMORY.md
-            echo "Memory Updated:\n$PROPOSED_MEMORY"
+            echo -e "Memory Updated:\n$PROPOSED_MEMORY"
         fi
         
         if [ -n "$PROPOSED_LEDGER" ]; then
             CURRENT_TASK_LABEL=$(printf '%s' "$PROPOSED_LEDGER" | tr -d '\n' | sed -nE 's/.*"task"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/p')
             echo "$PROPOSED_LEDGER" >> .agent-ledger.jsonl
-            echo "Ledger Entry Added:\n$PROPOSED_LEDGER"
+            echo -e "Ledger Entry Added:\n$PROPOSED_LEDGER"
         fi
 
         awk -v task="$CURRENT_TASK" '{
@@ -213,7 +219,7 @@ $PRD_CONTENT
         git commit -m "chore(ai): $CURRENT_TASK_LABEL" 
     else
         echo "🔴 Validation failed. The agent must try again."
-        echo "Test Output:\n$TEST_OUTPUT"
+        echo -e "Test Output:\n$TEST_OUTPUT"
 
         ERROR_FEEDBACK="
         YOUR LAST ATTEMPT FAILED!
