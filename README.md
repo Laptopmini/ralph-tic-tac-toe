@@ -20,6 +20,11 @@ This repo uses [ralph-html](https://github.com/Laptopmini/ralph-html) as a start
 - **Root test script** — `npm test` wired to run unit then E2E tests sequentially
 - **Static HTML website** — Configured to serve a static HTML based application
 - **Playwright webServer** — Updated Playwright configuration with webServer block for proper test execution
+- **Create the 3x3 grid** — Centered grid with CSS Grid layout, 4px gaps showing black borders, 300x300px sizing
+- **Add a click event for tiles** — Alternating X/O turns, prevents re-clicking filled tiles
+- **Add a reset button** — Clears board and resets player state, styled with blue background and hover effects
+- **Detect a win** — Win detection for rows, columns, and diagonals with victory message display
+- **Detect a draw** — Draw detection when all tiles are filled or when remaining move cannot result in a win
 
 ## Stack
 
