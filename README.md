@@ -13,6 +13,16 @@ For full documentation on how the Ralph Loop works and how to use these repos, s
 - **Playwright** — `playwright.config.ts` targeting Chromium at `localhost:3000`, plus a sanity E2E test
 - **Root test script** — `npm test` wired to run unit then E2E tests sequentially
 
+## Stack
+
+| Tool | Role |
+|------|------|
+| [Claude Code](https://docs.anthropic.com/en/docs/claude-code) | Default AI engine |
+| [OpenCode](https://opencode.ai/docs) | Alternative AI engine |
+| [Jest](https://jestjs.io/) | Unit testing |
+| [Playwright](https://playwright.dev/) | E2E testing |
+| [Biome](https://biomejs.dev/) | Linting and formatting |
+
 ## License
 
 Apache 2.0
