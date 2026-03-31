@@ -20,16 +20,70 @@
         <div data-testid="tile-8" class="tile"></div>
       </div>
       <button type="button" data-testid="reset-button" class="reset-button">Reset</button>
+      <div data-testid="game-message" class="game-message" style="display: none;"></div>
     </div>
 
     <script>
       let currentPlayer = "X";
 
       const tiles = document.querySelectorAll(".tile");
+      const messageElement = document.querySelector('[data-testid="game-message"]');
+
+      function checkWin() {
+        const boardState = Array.from(tiles).map((tile) => tile.textContent);
+
+        // Check rows
+        for (let i = 0; i < 3; i++) {
+          const rowStart = i * 3;
+          if (
+            boardState[rowStart] !== "" &&
+            boardState[rowStart] === boardState[rowStart + 1] &&
+            boardState[rowStart] === boardState[rowStart + 2]
+          ) {
+            return boardState[rowStart];
+          }
+        }
+
+        // Check columns
+        for (let i = 0; i < 3; i++) {
+          if (
+            boardState[i] !== "" &&
+            boardState[i] === boardState[i + 3] &&
+            boardState[i] === boardState[i + 6]
+          ) {
+            return boardState[i];
+          }
+        }
+
+        // Check diagonals
+        if (
+          boardState[0] !== "" &&
+          boardState[0] === boardState[4] &&
+          boardState[0] === boardState[8]
+        ) {
+          return boardState[0];
+        }
+
+        if (
+          boardState[2] !== "" &&
+          boardState[2] === boardState[4] &&
+          boardState[2] === boardState[6]
+        ) {
+          return boardState[2];
+        }
+
+        return null;
+      }
+
       tiles.forEach((tile) => {
         tile.addEventListener("click", () => {
           if (tile.textContent === "") {
             tile.textContent = currentPlayer;
+            const winner = checkWin();
+            if (winner) {
+              messageElement.textContent = `${winner} has won!`;
+              messageElement.style.display = "block";
+            }
             currentPlayer = currentPlayer === "X" ? "O" : "X";
           }
         });
@@ -40,6 +94,8 @@
         tiles.forEach((tile) => {
           tile.textContent = "";
         });
+        messageElement.textContent = "";
+        messageElement.style.display = "none";
         currentPlayer = "X";
       });
     </script>

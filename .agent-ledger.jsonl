@@ -18,3 +18,8 @@
   "summary": "Added embedded JavaScript to handle tile clicks with alternating X/O turns. Tracks currentPlayer state, prevents re-clicking filled tiles, and toggles player after each valid click."
 }
 {"task": "Add a reset button", "files_mutated": ["src/index.html", "src/style.css"], "summary": "Added reset button below grid with event handler to clear all tiles and reset player. Updated CSS to use flex-column layout with gap spacing, styled button with blue background (#0066cc), white text, 8px border-radius, and darker blue hover state (#003d99)."}
+{
+  "task": "Detect a win",
+  "files_mutated": ["src/index.html", "src/style.css"],
+  "summary": "Added win detection for rows, columns, and diagonals. Created checkWin() function that analyzes board state after each move and displays 'X has won!' or 'O has won!' message in game-message element. Updated reset handler to clear the victory message."
+}
