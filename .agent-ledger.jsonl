@@ -23,3 +23,8 @@
   "files_mutated": ["src/index.html", "src/style.css"],
   "summary": "Added win detection for rows, columns, and diagonals. Created checkWin() function that analyzes board state after each move and displays 'X has won!' or 'O has won!' message in game-message element. Updated reset handler to clear the victory message."
 }
+{
+  "task": "Detect a draw when the last tile cannot result in a win",
+  "files_mutated": ["src/index.html"],
+  "summary": "Added draw detection with two scenarios: (1) all 9 tiles filled with no winner, (2) exactly 1 empty tile and next move cannot result in a win. Modified checkWin() to accept optional boardState parameter and added wouldResultInWin() helper function to check if placing a mark in the remaining empty tile would create a winning condition."
+}

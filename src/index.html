@@ -29,8 +29,10 @@
       const tiles = document.querySelectorAll(".tile");
       const messageElement = document.querySelector('[data-testid="game-message"]');
 
-      function checkWin() {
-        const boardState = Array.from(tiles).map((tile) => tile.textContent);
+      function checkWin(boardState = null) {
+        if (!boardState) {
+          boardState = Array.from(tiles).map((tile) => tile.textContent);
+        }
 
         // Check rows
         for (let i = 0; i < 3; i++) {
@@ -75,14 +77,40 @@
         return null;
       }
 
+      function wouldResultInWin(boardState, playerMove) {
+        const tempBoard = [...boardState];
+        const emptyIndex = tempBoard.indexOf("");
+        if (emptyIndex === -1) return false;
+        tempBoard[emptyIndex] = playerMove;
+        return checkWin(tempBoard) !== null;
+      }
+
       tiles.forEach((tile) => {
         tile.addEventListener("click", () => {
           if (tile.textContent === "") {
             tile.textContent = currentPlayer;
-            const winner = checkWin();
+            const boardState = Array.from(tiles).map((t) => t.textContent);
+            const winner = checkWin(boardState);
             if (winner) {
               messageElement.textContent = `${winner} has won!`;
               messageElement.style.display = "block";
+            } else {
+              // Check if board is full or if only one tile is left and next move can't win
+              const emptyCount = boardState.filter((cell) => cell === "").length;
+              if (emptyCount === 0) {
+                // All tiles filled, no winner = draw
+                messageElement.textContent = "Draw!";
+                messageElement.style.display = "block";
+              } else if (emptyCount === 1) {
+                // One tile left — check if next player's move would result in a win
+                const nextPlayer =
+                  currentPlayer === "X" ? "O" : "X";
+                if (!wouldResultInWin(boardState, nextPlayer)) {
+                  // Next move can't result in a win = draw
+                  messageElement.textContent = "Draw!";
+                  messageElement.style.display = "block";
+                }
+              }
             }
             currentPlayer = currentPlayer === "X" ? "O" : "X";
           }

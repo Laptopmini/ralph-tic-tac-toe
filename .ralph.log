@@ -126,3 +126,86 @@ Ledger Entry Added:
   "files_mutated": ["src/index.html", "src/style.css"],
   "summary": "Added win detection for rows, columns, and diagonals. Created checkWin() function that analyzes board state after each move and displays 'X has won!' or 'O has won!' message in game-message element. Updated reset handler to clear the victory message."
 }
+[main 6d6bd6d] chore(ai): Detect a win
+ 5 files changed, 114 insertions(+), 16 deletions(-)
+Looping...
+------------------------- Iteration 5/10 -------------------------
+Parsing Active Task & Target Test...
+Active Task:
+    - [ ] Detect a draw. When there is only one tile left without a value, calculate if the next value would result in a win, under the previously described conditions. If the next value cannot result in a win, present a message saying `Draw!`. The message should be presented in the same location as the existing game-winning message, below the reset button. `[test: npx playwright test tests/e2e/detect-draw.spec.ts]`
+Targeted Backpressure Found: npx playwright test tests/e2e/detect-draw.spec.ts
+Assembling Context Window...
+🟡 Handing control to claude...
+Agent finished. Extracting proposed state updates...
+Running Validation: npx playwright test tests/e2e/detect-draw.spec.ts
+🔴 Validation failed. The agent must try again.
+Test Output:
+
+Running 2 tests using 1 worker
+
+  ✘  1 [chromium] › tests/e2e/detect-draw.spec.ts:8:7 › Detect Draw › detects a draw when the last tile cannot result in a win (5.2s)
+  ✓  2 [chromium] › tests/e2e/detect-draw.spec.ts:28:7 › Detect Draw › does not show draw when the last tile results in a win (202ms)
+
+
+  1) [chromium] › tests/e2e/detect-draw.spec.ts:8:7 › Detect Draw › detects a draw when the last tile cannot result in a win 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator:  locator('[data-testid="game-message"]')
+    Expected: visible
+    Received: hidden
+    Timeout:  5000ms
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for locator('[data-testid="game-message"]')[22m
+    [2m    9 × locator resolved to <div class="game-message" data-testid="game-message"></div>[22m
+    [2m      - unexpected value "hidden"[22m
+
+
+      22 |
+      23 |     const message = page.locator('[data-testid="game-message"]');
+    > 24 |     await expect(message).toBeVisible();
+         |                           ^
+      25 |     await expect(message).toHaveText("Draw!");
+      26 |   });
+      27 |
+        at /Users/sanchan/Documents/ralph-tic-tac-toe/tests/e2e/detect-draw.spec.ts:24:27
+
+    Error Context: test-results/detect-draw-Detect-Draw-de-faa38-tile-cannot-result-in-a-win-chromium/error-context.md
+
+  1 failed
+    [chromium] › tests/e2e/detect-draw.spec.ts:8:7 › Detect Draw › detects a draw when the last tile cannot result in a win 
+  1 passed (7.8s)
+Retrying in 5 seconds... (Ctrl+C to abort)
+Looping...
+------------------------- Iteration 6/10 -------------------------
+Parsing Active Task & Target Test...
+Active Task:
+    - [ ] Detect a draw. When there is only one tile left without a value, calculate if the next value would result in a win, under the previously described conditions. If the next value cannot result in a win, present a message saying `Draw!`. The message should be presented in the same location as the existing game-winning message, below the reset button. `[test: npx playwright test tests/e2e/detect-draw.spec.ts]`
+Targeted Backpressure Found: npx playwright test tests/e2e/detect-draw.spec.ts
+Assembling Context Window...
+🟡 Handing control to claude...
+Agent finished. Extracting proposed state updates...
+Running Validation: npx playwright test tests/e2e/detect-draw.spec.ts
+🟢 Task passed! Continuing...
+Memory Updated:
+## Draw Detection Implementation
+
+Implemented predictive draw detection for the Tic-Tac-Toe game:
+
+1. **Modified checkWin()**: Now accepts optional boardState parameter to check hypothetical board states
+2. **Added wouldResultInWin()**: Tests if placing a player's mark in the empty tile would create a winning condition
+3. **Updated click handler**: Shows "Draw!" message in two cases:
+   - All 9 tiles filled with no winner
+   - Exactly 1 empty tile left AND the next move can't produce a win
+
+The logic checks for draws BEFORE the final tile is clicked (when only 1 remains), matching the test expectation of detecting draws when "the last tile cannot result in a win."
+
+Quality checks passed: Biome linting, TypeScript type checking successful.
+Ledger Entry Added:
+{
+  "task": "Detect a draw when the last tile cannot result in a win",
+  "files_mutated": ["src/index.html"],
+  "summary": "Added draw detection with two scenarios: (1) all 9 tiles filled with no winner, (2) exactly 1 empty tile and next move cannot result in a win. Modified checkWin() to accept optional boardState parameter and added wouldResultInWin() helper function to check if placing a mark in the remaining empty tile would create a winning condition."
+}
