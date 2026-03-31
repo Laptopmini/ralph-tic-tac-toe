@@ -12,3 +12,8 @@
   ],
   "summary": "Replaced homepage with a centered 3x3 tic-tac-toe grid. Implemented using CSS Grid with 4px gaps showing black background for thick borders (no outer perimeter). Grid is 300x300px with 3rem margins, centered both horizontally and vertically on the page using flexbox. All 9 tiles have data-testid attributes and are initially empty."
 }
+{
+  "task": "Add a click event for tiles",
+  "files_mutated": ["src/index.html"],
+  "summary": "Added embedded JavaScript to handle tile clicks with alternating X/O turns. Tracks currentPlayer state, prevents re-clicking filled tiles, and toggles player after each valid click."
+}

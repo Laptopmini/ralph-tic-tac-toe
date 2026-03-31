@@ -1,7 +1,9 @@
-Implemented the 3x3 grid for the first task. Used:
-- CSS Grid (3x3) with 4px gaps to create thick black borders without outer perimeter
-- Flexbox centering on body and container for both horizontal and vertical alignment
-- Fixed 300px x 300px size with 3rem margin
-- All 9 tiles (tile-0 to tile-8) are empty and ready for future interactivity
+Implemented click event handling for tiles in `src/index.html`:
+- Added JavaScript to track `currentPlayer` (starts as "X")
+- Click listeners on all `.tile` elements
+- Logic: if tile is empty (textContent === ""), fill with current player and toggle
+- If tile is already filled, ignore the click
+- Linting fixed 1 file (formatting)
+- Type checking passed
 
-Lint and type checking both passed.
+This satisfies both test cases: alternating X/O and ignoring clicks on filled tiles.

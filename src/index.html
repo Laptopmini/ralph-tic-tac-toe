@@ -20,5 +20,19 @@
         <div data-testid="tile-8" class="tile"></div>
       </div>
     </div>
+
+    <script>
+      let currentPlayer = "X";
+
+      const tiles = document.querySelectorAll(".tile");
+      tiles.forEach((tile) => {
+        tile.addEventListener("click", () => {
+          if (tile.textContent === "") {
+            tile.textContent = currentPlayer;
+            currentPlayer = currentPlayer === "X" ? "O" : "X";
+          }
+        });
+      });
+    </script>
   </body>
 </html>
