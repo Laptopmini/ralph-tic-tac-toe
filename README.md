@@ -1,4 +1,4 @@
-# ralph-html
+# ralph-tic-tac-toe
 
 A fork of [ralph-node](https://github.com/Laptopmini/ralph-node) with a simple boilerplate to serve a static HTML based application.
 
