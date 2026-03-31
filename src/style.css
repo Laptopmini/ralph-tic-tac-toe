@@ -16,8 +16,10 @@ body {
 .container {
   margin: 3rem;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 2rem;
 }
 
 .grid {
@@ -38,4 +40,19 @@ body {
   align-items: center;
   font-size: 48px;
   font-weight: bold;
+}
+
+.reset-button {
+  padding: 12px 32px;
+  font-size: 16px;
+  background-color: #0066cc;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.reset-button:hover {
+  background-color: #003d99;
 }

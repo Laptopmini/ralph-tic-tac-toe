@@ -19,6 +19,7 @@
         <div data-testid="tile-7" class="tile"></div>
         <div data-testid="tile-8" class="tile"></div>
       </div>
+      <button type="button" data-testid="reset-button" class="reset-button">Reset</button>
     </div>
 
     <script>
@@ -32,6 +33,14 @@
             currentPlayer = currentPlayer === "X" ? "O" : "X";
           }
         });
+      });
+
+      const resetButton = document.querySelector('[data-testid="reset-button"]');
+      resetButton.addEventListener("click", () => {
+        tiles.forEach((tile) => {
+          tile.textContent = "";
+        });
+        currentPlayer = "X";
       });
     </script>
   </body>
