@@ -1,6 +1,41 @@
 /* Base stylesheet for Ralph HTML app */
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
-  padding: 20px;
+  padding: 0;
   font-family: system-ui, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.container {
+  margin: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 4px;
+  width: 300px;
+  height: 300px;
+  background-color: black;
+  padding: 4px;
+}
+
+.tile {
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 48px;
+  font-weight: bold;
 }
